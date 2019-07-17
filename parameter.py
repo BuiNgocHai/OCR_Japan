@@ -5,7 +5,7 @@ letters = vocab
 
 num_classes = len(letters) + 1
 
-img_w, img_h = 128, 64
+img_w, img_h = 800, 64
 
 # Network parameters
 batch_size = 2
