@@ -81,7 +81,12 @@ class TextImageGenerator:
                 img = img.T
                 img = np.expand_dims(img, -1)
                 X_data[i] = img
-                Y_data[i] = text_to_labels(text)
+                ##padding
+                text_padding = text_to_labels(text)
+                len_padding = self.max_text_len - len(text_padding)
+                 
+                Y_data[i] = text_padding.extend(np.zeros((len_padding,), dtype=int)))
+                
                 label_length[i] = len(text)
 
             # dict 
