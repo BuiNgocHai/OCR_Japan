@@ -40,7 +40,7 @@ class TextImageGenerator:
     def build_data(self):
         print("Json Loading start.....")
         data = load_json(self.json_path)
-        sum = 0
+        
         print(self.n, " Image Loading start...")
         values_lec = 0 
         if self.status == 'train':
@@ -55,9 +55,6 @@ class TextImageGenerator:
 
             self.imgs[i, :, :] = img
             self.texts.append(data[str(i+values_lec)][0]['class'])
-            sum+=1
-            if sum == 10 :
-                break
         print(len(self.texts) == self.n)
         print(self.texts)
         print(self.n, " Image Loading finish...")
