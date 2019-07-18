@@ -37,16 +37,27 @@ class TextImageGenerator:
         self.status = status
 
     ## load data
-    def build_data(self):
+    def load_data(self):
         print("Json Loading start.....")
-        data = load_json(self.json_path)
-        
-        print(self.n, " Image Loading start...")
         values_lec = 0 
         if self.status == 'train':
             values_lec = 19800
         if self.status == 'val':
             values_lec = 0
+        data = load_json(self.json_path)
+        key = data.keys()
+        img_path = []
+        labels = []
+        for i in range(len(key)):
+            img_path.append(data[str(i+values_lec)][0]['path'])
+            labels.append(data[str(i+values_lec)][0]['class'])
+        return img_path, labels
+    '''
+    def build_data(self):
+        
+        
+        print(self.n, " Image Loading start...")
+
         for i in range(len(data)):
             img = cv2.imread('.'+data[str(i+values_lec)][0]['path'], cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(img, (self.img_w, self.img_h))
@@ -65,16 +76,38 @@ class TextImageGenerator:
             self.cur_index = 0
             random.shuffle(self.indexes)
         return self.imgs[self.indexes[self.cur_index]], self.texts[self.indexes[self.cur_index]]
+    '''
+    def load_img(self,img_path):
+        img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+        img = cv2.resize(img, (self.img_w, self.img_h))
+        img = img.astype(np.float32)
+        img = (img / 255.0) * 2.0 - 1.0
+        return img
 
     def next_batch(self):       ## batch size
+
+
+        img_path, labels = load_data()
+        img_path = np.array(img_path)
+        labels = np.array(labels)
+        order = np.arange(len(img_path))
         while True:
+
+            np.random.shuffle(order)
+            x = img_path[order]
+            y = labels[order]
+
             X_data = np.ones([self.batch_size, self.img_w, self.img_h, 1])     # (bs, 128, 64, 1)
             Y_data = np.ones([self.batch_size, self.max_text_len])             # (bs, 9)
             input_length = np.ones((self.batch_size, 1)) * (self.img_w // self.downsample_factor - 2)  # (bs, 1)
             label_length = np.zeros((self.batch_size, 1))           # (bs, 1)
 
             for i in range(self.batch_size):
-                img, text = self.next_sample()
+
+                img = load_img(x[i])
+
+                text = y[i]
+                #img, text = self.next_sample()
                 img = img.T
                 img = np.expand_dims(img, -1)
                 X_data[i] = img

@@ -21,12 +21,12 @@ print(model.summary())
 img_train_path = './data_japan/train/'
 json_train_path = './data_japan/labels/train.json'
 tiger_train = TextImageGenerator( img_train_path, json_train_path, img_w, img_h, batch_size,'train', downsample_factor)
-tiger_train.build_data()
+#tiger_train.build_data()
 
 img_val_path = './data_japan/test/'
 json_val_path = './data_japan/labels/test.json'
 tiger_val = TextImageGenerator(img_val_path, json_val_path, img_w, img_h, val_batch_size,'val', downsample_factor)
-tiger_val.build_data()
+#tiger_val.build_data()
 print('>>>>>>>>>>>>>>>>>',val_batch_size)
 
 ada = Adadelta()
