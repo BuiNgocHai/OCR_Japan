@@ -5,11 +5,11 @@ letters = vocab
 
 num_classes = len(letters) + 1
 
-img_w, img_h = 512, 64
+img_w, img_h = 700, 64
 
 # Network parameters
-batch_size = 128
-val_batch_size = 128
+batch_size = 16
+val_batch_size = 16
 
 downsample_factor = 4
 max_text_len = 125
