@@ -113,7 +113,7 @@ class TextImageGenerator:
                 X_data[i] = img
                 ##padding
                 text_padding = text_to_labels(text)
-                print(text_padding)
+                
                 len_padding = self.max_text_len - len(text_padding)
                  
                 Y_data[i] = text_padding.extend(np.zeros((len_padding,), dtype=int))
