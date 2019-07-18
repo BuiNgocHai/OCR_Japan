@@ -87,7 +87,7 @@ class TextImageGenerator:
     def next_batch(self):       ## batch size
 
 
-        img_path, labels = load_data()
+        img_path, labels = self.load_data()
         img_path = np.array(img_path)
         labels = np.array(labels)
         order = np.arange(len(img_path))
@@ -104,7 +104,7 @@ class TextImageGenerator:
 
             for i in range(self.batch_size):
 
-                img = load_img(x[i])
+                img = self.load_img(x[i])
 
                 text = y[i]
                 #img, text = self.next_sample()
