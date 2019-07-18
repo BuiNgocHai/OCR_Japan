@@ -16,6 +16,7 @@ try:
 except:
     print("...New weight data...")
     pass
+print(model.summary())
 
 img_train_path = './data_japan/train/'
 json_train_path = './data_japan/labels/train.json'
@@ -30,7 +31,7 @@ print('>>>>>>>>>>>>>>>>>',val_batch_size)
 
 ada = Adadelta()
 
-print(model.summary())
+
 early_stop = EarlyStopping(monitor='loss', min_delta=0.001, patience=4, mode='min', verbose=1)
 checkpoint = ModelCheckpoint(filepath='LSTM+BN5--{epoch:02d}--{val_loss:.3f}.hdf5', monitor='loss', verbose=1, mode='min', period=1)
 # the loss calc occurs elsewhere, so use a dummy lambda func for the loss
