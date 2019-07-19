@@ -9,7 +9,7 @@ from keras import backend as K
 K.set_learning_phase(0)
 
 class TrainCheck(Callback):
-    def __init__(self, ):
+    def __init__(self):
         self.epoch = 0
         self.output_path = 0
         self.model_name = 0
@@ -32,13 +32,13 @@ class TrainCheck(Callback):
         letter_total = 0
         letter_acc = 0
         start = time.time()
-        with open('./data_japan/labels/test_ep.json') as f:
+        with open('./data_japan/labels/tes_ep.json') as f:
             data = json.load(f) 
         for test_img in test_imgs:
             img = cv2.imread(test_dir + test_img, cv2.IMREAD_GRAYSCALE)
 
             img_pred = img.astype(np.float32)
-            img_pred = cv2.resize(img_pred, (128, 64))
+            img_pred = cv2.resize(img_pred, (600, 64))
             img_pred = (img_pred / 255.0) * 2.0 - 1.0
             img_pred = img_pred.T
             img_pred = np.expand_dims(img_pred, axis=-1)
