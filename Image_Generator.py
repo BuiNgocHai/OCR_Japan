@@ -20,7 +20,7 @@ def load_json(file_path):
 
 class TextImageGenerator:
     def __init__(self,img_dirpath, json_path, img_w, img_h,
-                 batch_size, status, downsample_factor, max_text_len=125):
+                 batch_size, status, downsample_factor, max_text_len=80):
         self.img_h = img_h
         self.img_w = img_w
         self.batch_size = batch_size
@@ -49,8 +49,9 @@ class TextImageGenerator:
         img_path = []
         labels = []
         for i in range(len(key)):
-            img_path.append(data[str(i+values_lec)][0]['path'])
-            labels.append(data[str(i+values_lec)][0]['class'])
+            if (i+values_lec) != 90667:
+                img_path.append(data[str(i+values_lec)][0]['path'])
+                labels.append(data[str(i+values_lec)][0]['class'])
         return img_path, labels
     '''
     def build_data(self):
