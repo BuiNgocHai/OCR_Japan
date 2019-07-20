@@ -13,7 +13,7 @@ K.set_learning_phase(0)
 model = get_Model(training=True)
 
 try:
-    model.load_weights('LSTM+BN4--26--0.011.hdf5')
+    model.load_weights('./model_OCR/LSTM+BN5--08--1.671.hdf5')
     print("...Previous weight data...")
 except:
     print("...New weight data...")
@@ -35,8 +35,8 @@ ada = Adadelta()
 
 
 early_stop = EarlyStopping(monitor='loss', min_delta=0.001, patience=4, mode='min', verbose=1)
-checkpoint = ModelCheckpoint(filepath='./model/' +'LSTM+BN5--{epoch:02d}--{val_loss:.3f}.hdf5', monitor='loss', verbose=1, mode='min', period=1)
-tensorboard = TensorBoard(log_dir="logs/LSTM+BN5{}".format(time.time()),
+checkpoint = ModelCheckpoint(filepath='./model_OCR/' +'LSTM+BN5--{epoch:02d}--{val_loss:.3f}.hdf5', monitor='loss', verbose=1, mode='min', period=1)
+tensorboard = TensorBoard(log_dir="logs_OCR/LSTM+BN5{}".format(time.time()),
                               batch_size=batch_size, write_images=True)
 train_check = TrainCheck()
 # the loss calc occurs elsewhere, so use a dummy lambda func for the loss
@@ -48,4 +48,4 @@ model.fit_generator(generator=tiger_train.next_batch(),
                     epochs=30,
                     callbacks=[checkpoint,train_check,tensorboard],
                     validation_data=tiger_val.next_batch(),
-                    validation_steps=int(tiger_val.n / val_batch_size))
+                    validation_steps=int(tiger_val.n / val_batch_size),initial_epoch = 8 )
