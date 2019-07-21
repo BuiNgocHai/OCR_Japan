@@ -4,7 +4,7 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from Image_Generator import TextImageGenerator
 from Model import get_Model
 import time
-#from callbacks import TrainCheck
+from callbacks import TrainCheck
 from parameter import *
 K.set_learning_phase(0)
 
