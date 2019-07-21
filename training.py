@@ -1,10 +1,10 @@
 from keras import backend as K
-from keras.optimizers import Adadelta
+from keras.optimizers import Adam
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from Image_Generator import TextImageGenerator
 from Model import get_Model
 import time
-from callbacks import TrainCheck
+#from callbacks import TrainCheck
 from parameter import *
 K.set_learning_phase(0)
 
@@ -31,7 +31,7 @@ tiger_val = TextImageGenerator(img_val_path, json_val_path, img_w, img_h, val_ba
 #tiger_val.build_data()
 print('>>>>>>>>>>>>>>>>>',val_batch_size)
 
-ada = Adadelta()
+ada = Adam()
 
 
 early_stop = EarlyStopping(monitor='loss', min_delta=0.001, patience=4, mode='min', verbose=1)
