@@ -19,7 +19,7 @@ def load_json(file_path):
 
 
 class TextImageGenerator:
-    def __init__(self,img_dirpath, json_path, img_w, img_h,
+    def __init__(self, json_path, img_w, img_h,
                  batch_size, status, downsample_factor, max_text_len=80):
         self.img_h = img_h
         self.img_w = img_w
@@ -27,9 +27,7 @@ class TextImageGenerator:
         self.max_text_len = max_text_len
         self.downsample_factor = downsample_factor
         self.json_path = json_path
-        self.img_dirpath = img_dirpath                  # image dir path
-        self.img_dir = os.listdir(self.img_dirpath)     # images list
-        self.n = len(self.img_dir)                      # number of images
+        self.n = len(load_json(self.json_path).keys())
         #self.indexes = list(range(self.n))
         #self.cur_index = 0
         #self.imgs = np.zeros((self.n, self.img_h, self.img_w))
@@ -39,19 +37,13 @@ class TextImageGenerator:
     ## load data
     def load_data(self):
         print("Json Loading start.....")
-        values_lec = 0 
-        if self.status == 'train':
-            values_lec = 19800
-        if self.status == 'val':
-            values_lec = 0
         data = load_json(self.json_path)
-        key = data.keys()
         img_path = []
         labels = []
-        for i in range(len(key)):
-            if (i+values_lec) != 90667:
-                img_path.append(data[str(i+values_lec)][0]['path'])
-                labels.append(data[str(i+values_lec)][0]['class'])
+        print("Found " + str(self.status) + ' ' + str(len(data.keys())))
+        for key in data:
+            img_path.append(key)
+            labels.append(data[key])
         return img_path, labels
     '''
     def build_data(self):
@@ -79,7 +71,8 @@ class TextImageGenerator:
         return self.imgs[self.indexes[self.cur_index]], self.texts[self.indexes[self.cur_index]]
     '''
     def load_img(self,img_path):
-        img = cv2.imread('.'+img_path, cv2.IMREAD_GRAYSCALE)
+
+        img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
         img = cv2.resize(img, (self.img_w, self.img_h))
         img = img.astype(np.float32)
         img = (img / 255.0) * 2.0 - 1.0
