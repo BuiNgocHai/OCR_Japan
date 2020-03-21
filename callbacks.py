@@ -3,16 +3,17 @@ import cv2
 import numpy as np
 import itertools, os, time
 from Model import get_Model
-from parameter import letters
+from parameter import *
 import json
 from keras import backend as K
 K.set_learning_phase(0)
 
 class TrainCheck(Callback):
-    def __init__(self):
+    def __init__(self, json_path):
         self.epoch = 0
         self.output_path = 0
         self.model_name = 0
+        self.json_path = json_path
 
     def decode_label(self,out):
     
@@ -24,21 +25,29 @@ class TrainCheck(Callback):
                 outstr += letters[i]
         return outstr
 
+    def load_data(self):
+        print("Json Loading start.....")
+        data = load_json(self.json_path)
+        img_path = []
+        labels = []
+        print("Data Test Found " + str(len(data.keys())))
+        for key in data:
+            img_path.append(key)
+            labels.append(data[key])
+        return img_path, labels
+
     def TrainCheck(self):
-        test_dir = './data_japan/test_ep/'
-        test_imgs = os.listdir('./data_japan/test_ep/')
+        img_path, labels = self.load_data()
         total = 0
         acc = 0
         letter_total = 0
         letter_acc = 0
         start = time.time()
-        with open('./data_japan/labels/tes_ep.json') as f:
-            data = json.load(f) 
-        for test_img in test_imgs:
-            img = cv2.imread(test_dir + test_img, cv2.IMREAD_GRAYSCALE)
+        for index in range(len(img_path)):
+            img = cv2.imread(img_path[index], cv2.IMREAD_GRAYSCALE)
 
             img_pred = img.astype(np.float32)
-            img_pred = cv2.resize(img_pred, (600, 64))
+            img_pred = cv2.resize(img_pred, (img_w, img_h))
             img_pred = (img_pred / 255.0) * 2.0 - 1.0
             img_pred = img_pred.T
             img_pred = np.expand_dims(img_pred, axis=-1)
@@ -48,16 +57,13 @@ class TrainCheck(Callback):
 
             pred_texts = self.decode_label(net_out_value)
 
-            for i in range(len(data.keys())):
-                if test_img == data[str(i)][0]['path'][17:]:
-                    true_texts = data[str(i)][0]['class']
-                    break 
+            true_texts = labels[index]
             for i in range(min(len(pred_texts), len(true_texts))):
-                if pred_texts[i] == test_img[i]:
+                if pred_texts[i] == true_texts[i]:
                     letter_acc += 1
             letter_total += max(len(pred_texts), len(true_texts))
 
-            if pred_texts == test_img[0:-4]:
+            if pred_texts == true_texts:
                 acc += 1
             total += 1
             print('Predicted: %s  /  True: %s' % (pred_texts, true_texts ))
