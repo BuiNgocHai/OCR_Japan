@@ -4,7 +4,7 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from Image_Generator import TextImageGenerator
 from Model import get_Model
 import time
-from callbacks import TrainCheck
+from callbacks import TrainCheck,myCallback
 from parameter import *
 K.set_learning_phase(0)
 
@@ -38,6 +38,7 @@ early_stop = EarlyStopping(monitor='loss', min_delta=0.001, patience=4, mode='mi
 checkpoint = ModelCheckpoint(filepath='./model_OCR/' +'LSTM+BN5--{epoch:02d}--{val_loss:.3f}.hdf5', monitor='loss', verbose=1, mode='min', period=1)
 tensorboard = TensorBoard(log_dir="logs_OCR/LSTM+BN5{}".format(time.time()),
                               batch_size=batch_size, write_images=True)
+save_batch = myCallback()
 #train_check = TrainCheck()
 # the loss calc occurs elsewhere, so use a dummy lambda func for the loss
 model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=ada)
@@ -46,6 +47,6 @@ model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=ada)
 model.fit_generator(generator=tiger_train.next_batch(),
                     steps_per_epoch=int(tiger_train.n / batch_size),
                     epochs=300,
-                    callbacks=[checkpoint,tensorboard],
+                    callbacks=[checkpoint,tensorboard,save_batch],
                     validation_data=tiger_val.next_batch(),
                     validation_steps=int(tiger_val.n / val_batch_size) )

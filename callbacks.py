@@ -8,6 +8,10 @@ import json
 from keras import backend as K
 K.set_learning_phase(0)
 
+class myCallback(keras.callbacks.Callback):
+    def on_batch_end(self, batch,logs={}):
+        self.model.save_weights('./model_OCR/model_batch_'+str(batch)+'.hdf5')
+
 class TrainCheck(Callback):
     def __init__(self, json_path):
         self.epoch = 0
