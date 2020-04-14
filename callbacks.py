@@ -5,12 +5,14 @@ import itertools, os, time
 from Model import get_Model
 from parameter import *
 import json
+import keras
 from keras import backend as K
 K.set_learning_phase(0)
 
 class myCallback(keras.callbacks.Callback):
     def on_batch_end(self, batch,logs={}):
-        self.model.save_weights('./model_OCR/model_batch_'+str(batch)+'.hdf5')
+        if batch%100 == 0:
+            self.model.save_weights('./model_OCR/model_batch_'+str(batch)+'_epoch_'+str(self.epoch)+'.hdf5')
 
 class TrainCheck(Callback):
     def __init__(self, json_path):
