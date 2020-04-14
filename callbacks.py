@@ -12,7 +12,7 @@ K.set_learning_phase(0)
 class myCallback(keras.callbacks.Callback):
     def on_batch_end(self, batch,logs={}):
         if batch%100 == 0:
-            self.model.save_weights('./model_OCR/model_batch_'+str(batch)+'_epoch_'+str(self.epoch)+'.hdf5')
+            self.model.save_weights('./model_OCR/model_batch_'+str(batch)+'.hdf5')
 
 class TrainCheck(Callback):
     def __init__(self, json_path):
